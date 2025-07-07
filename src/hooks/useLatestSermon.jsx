@@ -27,12 +27,11 @@ function getLastSundayTimeRange() {
   };
 }
 
-function getPreviousSundayISOString() {
+function getMostRecentSundayISOString() {
   const now = new Date();
   const day = now.getDay(); // Sunday = 0
-  const diff = day === 0 ? 7 : day; // If today is Sunday, go back a full week
   const sunday = new Date(now);
-  sunday.setDate(now.getDate() - diff);
+  sunday.setDate(now.getDate() - day);
   sunday.setHours(0, 0, 0, 0);
   return sunday.toISOString();
 }
@@ -52,8 +51,12 @@ const useLatestSermon = () => {
 
       if (isFresh) {
         const parsed = JSON.parse(cachedSermon);
-        console.log("⚡ Using cached sermon:", parsed);
-        setSermon(parsed);
+        const normalized = {
+          ...parsed,
+          publishedAt: getMostRecentSundayISOString(),
+        };
+        console.log("⚡ Using cached sermon (normalized):", normalized);
+        setSermon(normalized);
         return;
       }
 
@@ -133,7 +136,7 @@ const useLatestSermon = () => {
         const sermonData = {
           videoId: uploadedVideo.id,
           title: uploadedVideo.snippet.title,
-          publishedAt: getPreviousSundayISOString(),
+          publishedAt: getMostRecentSundayISOString(),
           fallbackUrl: "https://www.youtube.com/@LivingGraceMinistry",
         };
 

@@ -21,6 +21,7 @@ export default function LatestSermon() {
             {sermon.publishedAt && (
               <p className="sermon-date">
                 {new Date(sermon.publishedAt).toLocaleDateString("en-US", {
+                  timeZone: "America/New_York", // Adjust as needed
                   year: "numeric",
                   month: "long",
                   day: "numeric",
