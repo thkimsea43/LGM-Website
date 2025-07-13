@@ -53,7 +53,13 @@ export default function LatestSermon() {
               </div>
             </>
           ) : (
-            <YoutubeChannel />
+            <iframe
+              src={`https://www.youtube.com/embed/live_stream?channel=UCFN3i5-SUCJctC_h5hMiBBw&autoplay=1`}
+              title="Livestream"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
           )}
         </div>
       </div>
