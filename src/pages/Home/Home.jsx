@@ -16,8 +16,10 @@ export default function Home() {
         <AnimatedSection className="content-block" delay={400} as="div">
           <h1>Living Grace Ministry</h1>
           <p>
-            Making a community of Jesus’s disciples who love like Jesus through
-            God’s grace
+            <strong>
+              Making a community of Jesus’s disciples who love like Jesus
+              through God’s grace
+            </strong>
           </p>
         </AnimatedSection>
 
