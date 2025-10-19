@@ -6,34 +6,95 @@ const CACHE_KEY_SERMON = "latestSermonData";
 const CACHE_KEY_TIMESTAMP = "latestSermonTimestamp";
 const CACHE_DURATION_MS = 1000 * 60 * 60; // 1 hour
 
-function getLastSundayTimeRange() {
-  const now = new Date();
-  const day = now.getDay(); // Sunday = 0
-  const daysSinceSunday = day === 0 ? 0 : day;
-  const sunday = new Date(now);
-  sunday.setDate(now.getDate() - daysSinceSunday);
-  sunday.setHours(0, 0, 0, 0);
+// ---- Time helpers (America/New_York, Sunday rolls at 13:30) ----
+const TZ = "America/New_York";
+const CUTOFF_HOUR = 13; // 1 PM
+const CUTOFF_MIN = 30; // :30
 
-  const sundayEnd = new Date(sunday);
-  sundayEnd.setHours(23, 59, 59, 999);
+function getNYParts(date = new Date()) {
+  const fmt = new Intl.DateTimeFormat("en-US", {
+    timeZone: TZ,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+    weekday: "short",
+    timeZoneName: "shortOffset",
+  });
+  const parts = Object.fromEntries(
+    fmt.formatToParts(date).map((p) => [p.type, p.value])
+  );
+  const wdMap = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
 
-  console.log("📅 Sunday Time Range:");
-  console.log("↪️ publishedAfter:", sunday.toISOString());
-  console.log("↩️ publishedBefore:", sundayEnd.toISOString());
+  // Parse offset like "GMT-4" or "GMT+05:30"
+  const m = (parts.timeZoneName || "").match(/GMT([+-]\d{1,2})(?::(\d{2}))?/);
+  const offMin = m
+    ? parseInt(m[1], 10) * 60 + (m[2] ? parseInt(m[2], 10) : 0)
+    : 0;
 
   return {
-    publishedAfter: sunday.toISOString(),
-    publishedBefore: sundayEnd.toISOString(),
+    y: +parts.year,
+    m: +parts.month,
+    d: +parts.day,
+    hh: +parts.hour,
+    mm: +parts.minute,
+    ss: +parts.second,
+    dow: wdMap[parts.weekday] ?? 0,
+    offsetMinutes: offMin, // NY offset vs UTC at this instant
   };
 }
 
+// Convert a NY "wall clock" datetime to a real UTC Date
+function nyWallToUtc(y, m, d, hh = 0, mm = 0, ss = 0, ms = 0) {
+  // Create a UTC date with same numbers...
+  const approxUtc = Date.UTC(y, m - 1, d, hh, mm, ss, ms);
+  // ...then shift by the NY offset at that moment
+  const probe = new Date(approxUtc);
+  const { offsetMinutes } = getNYParts(probe);
+  return new Date(approxUtc - offsetMinutes * 60_000);
+}
+
+// Determine the “effective Sunday” (rolls at 13:30 NY time)
+function getEffectiveSundayNY(now = new Date()) {
+  const { y, m, d, hh, mm, dow } = getNYParts(now);
+
+  // Is it Sunday but before the 1:30 PM cutoff?
+  const isBeforeCutoffOnSunday =
+    dow === 0 && (hh < CUTOFF_HOUR || (hh === CUTOFF_HOUR && mm < CUTOFF_MIN));
+
+  // How many days to step back to reach the effective Sunday
+  const backDays = isBeforeCutoffOnSunday ? 7 : dow;
+
+  // Compute the NY date for that Sunday
+  const currentUtcMidnightNY = nyWallToUtc(y, m, d, 0, 0, 0, 0);
+  const sundayUtc = new Date(
+    currentUtcMidnightNY.getTime() - backDays * 86400_000
+  );
+
+  // Convert back to NY parts to get the actual Y/M/D of that Sunday
+  const sp = getNYParts(sundayUtc);
+  const startUtc = nyWallToUtc(sp.y, sp.m, sp.d, 0, 0, 0, 0);
+  const endUtc = nyWallToUtc(sp.y, sp.m, sp.d, 23, 59, 59, 999);
+
+  return {
+    startIso: startUtc.toISOString(),
+    endIso: endUtc.toISOString(),
+    sundayStartIso: startUtc.toISOString(), // convenience for your "publishedAt"
+  };
+}
+
+// Old API wrappers rewritten to use the effective Sunday window:
+function getLastSundayTimeRange() {
+  const { startIso, endIso } = getEffectiveSundayNY();
+  return { publishedAfter: startIso, publishedBefore: endIso };
+}
+
 function getMostRecentSundayISOString() {
-  const now = new Date();
-  const day = now.getDay(); // Sunday = 0
-  const sunday = new Date(now);
-  sunday.setDate(now.getDate() - day);
-  sunday.setHours(0, 0, 0, 0);
-  return sunday.toISOString();
+  const { sundayStartIso } = getEffectiveSundayNY();
+  return sundayStartIso;
 }
 
 const useLatestSermon = () => {

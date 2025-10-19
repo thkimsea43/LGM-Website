@@ -28,13 +28,13 @@
     "react": "^19.1.0",
     "react-bootstrap": "^2.10.10",
     "react-dom": "^19.1.0",
-    "react-router-dom": "^7.6.2",
-    "vite": "^6.3.5"
+    "react-router-dom": "^7.6.2"
   },
   "engines": {
     "node": "18.x"
   },
   "devDependencies": {
+    "vite": "^7.1.10",
     "wrangler": "^4.23.0"
   }
 }
