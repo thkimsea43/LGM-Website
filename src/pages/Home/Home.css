@@ -93,6 +93,9 @@ body {
   animation: backgroundZoomIn 1.5s ease forwards;
   overflow: hidden;
   will-change: transform;
+  margin-top: -160px;
+  padding-top: 160px;
+  min-height: 100vh;
 }
 
 .section-with-background::before {
