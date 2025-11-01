@@ -18,7 +18,7 @@ export default function MissionVision() {
             our support for the UMC churches in Central Asia throughout the
             year. Please send money through our normal channels (see offering
             information), but please let Jason Um <b>(jasonum@gmail.com)</b>{" "}
-            know if the money is meant for Central Asia missions , thanks!
+            know if the money is meant for Central Asia missions, thanks!
           </p>
         }
         image={{ src: "/central_asia.jpg", alt: "Central Asia" }}
