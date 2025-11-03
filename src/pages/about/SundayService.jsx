@@ -40,9 +40,9 @@ export default function SundayService() {
         text={
           <>
             <p>
-              We are just a short 5 minute drive from downtown Ann Arbor and the
-              University of Michigan campus. We provide rides from campus—
-              please contact our ride coordinator for more information.
+              We are just a short bus ride from downtown Ann Arbor and the
+              University of Michigan campus. If you have any questions, please contact 
+              our ride coordinator. 
             </p>
             <h2>Contact: Matt Nho - mnho@umich.edu</h2>
           </>
