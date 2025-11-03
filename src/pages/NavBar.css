@@ -10,6 +10,14 @@
   z-index: 1000;
 }
 
+.transparent-header {
+  background: transparent;
+}
+
+.transparent-header .nav-link {
+  color: white;
+}
+
 /* Logo container */
 .logo {
   display: flex;

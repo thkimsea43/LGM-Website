@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import "./NavBar.css";
 
 const NavBar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
+  const location = useLocation();
+  const isHomePage = (location.pathname === "/")
 
   const closeMenu = () => {
     setMenuOpen(false);
@@ -16,10 +18,10 @@ const NavBar = () => {
   };
 
   return (
-    <header className="site-header">
+    <header className={`site-header ${isHomePage ? "transparent-header" : ""}`}>
       <div className="logo">
         <Link to="/" onClick={closeMenu}>
-          <img src="/lgm_logo.png" alt="Church Logo" />
+          <img src={`/${isHomePage ? "lgm_logo_white.png" : "lgm_logo.png"}`} alt="Church Logo" />
         </Link>
 
         <button
