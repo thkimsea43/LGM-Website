@@ -1,3 +1,6 @@
+<h1>This version of the website will be sunset. You can find the new version here</h1>
+<p>https://github.com/lgm-aa/LGM_Website_v3</p>
+
 <h1 align="center">Welcome to lgm-website 👋</h1>
 <p>
   <img alt="Version" src="https://img.shields.io/badge/version-0.0.0-blue.svg?cacheSeconds=2592000" />
