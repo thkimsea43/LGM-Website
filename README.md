@@ -1,6 +1,6 @@
 <h1 align="center">🚀 We’re moving! This repository is being replaced by a full React + Tailwind redesign.
 Please visit the new version here:</h1>
-<p>https://github.com/lgm-aa/LGM_Website_v3</p>
+<p align="center">https://github.com/lgm-aa/LGM_Website_v3</p>
 
 <h1 align="center">Welcome to lgm-website 👋</h1>
 <p>
