@@ -1,4 +1,5 @@
-<h1>This version of the website will be sunset. You can find the new version here</h1>
+<h1 align="center">🚀 We’re moving! This repository is being replaced by a full React + Tailwind redesign.
+Please visit the new version here:</h1>
 <p>https://github.com/lgm-aa/LGM_Website_v3</p>
 
 <h1 align="center">Welcome to lgm-website 👋</h1>
